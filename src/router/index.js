@@ -9,6 +9,10 @@ const user = () => import('../views/user/user.vue');
 
 const routes = [
   {
+    path: '/',
+    redirect: '/home'
+  },
+  {
     name: "home",
     path: "/home",
     component: home
