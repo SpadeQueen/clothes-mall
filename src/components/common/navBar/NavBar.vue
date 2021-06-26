@@ -17,8 +17,7 @@ export default {
     display:flex;
     text-align: center;
     height: 44px;
-    line-height: 44px;
-    
+    line-height: 44px;    
 }
 
 .left,.right{
