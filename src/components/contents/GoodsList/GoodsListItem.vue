@@ -1,7 +1,7 @@
 <!-- 商品展示的Item组件 -->
 <template>
   <div class="goodsListItem">
-    <img :src="goods.show.img" />
+    <img :src="goods.show.img" @load="goodsItemImgLoad"/>
     <div class="goodsInfo">
       <p>{{ goods.title }}</p>
       <span class="price">{{ goods.price }}</span>
@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import Bus from "../../../common/Bus.js"
+
 export default {
   name: "GoodsListItem",
   props: {
@@ -24,6 +26,11 @@ export default {
   data() {
     return {};
   },
+  methods:{
+    goodsItemImgLoad(){
+      Bus.$emit("goodsItemImgLoad");
+    }
+  }
 };
 </script>
 

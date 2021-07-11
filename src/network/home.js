@@ -6,7 +6,7 @@ export function getHomeMultidata() {
     })
   }
 
-  export function getGoodsdata(type,page) {
+  export function getGoodsdata(type,page=1) {
     return axios({
       url: '/home/data',
       params:{
