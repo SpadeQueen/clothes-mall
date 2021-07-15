@@ -2,9 +2,16 @@
   <div id="home">
     <nav-bar class="home-nav">
       <template #nav-center>
-        <div>购物车</div>
+        <div>首页</div>
       </template>
     </nav-bar>
+    <tab-controller
+      class="tab-control"
+      :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"
+      ref="tabControl1"
+      v-show="isTabFixed"
+    ></tab-controller>
     <scroll
       class="homeScroll"
       ref="scroll"
@@ -13,12 +20,17 @@
       @pullingUp="loadMore"
       @scroll="contentScroll"
     >
-      <home-swiper class="home-swiper" :banners="banners"></home-swiper>
+      <home-swiper
+        class="home-swiper"
+        :banners="banners"
+        @homeSwiperImgLoad="swiperImgLoad"
+      ></home-swiper>
       <recommend-view :recommend="recommend"></recommend-view>
       <popular-view></popular-view>
       <tab-controller
         :titles="['流行', '新款', '精选']"
         @tabClick="tabClick"
+        ref="tabControl2"
       ></tab-controller>
       <goods-list :goodsList="showGoods"></goods-list>
     </scroll>
@@ -45,7 +57,7 @@ import Bus from "../../common/Bus.js";
 import BackTop from "../../components/contents/backTop/backTop.vue";
 
 export default {
-  name: "home",
+  name: "Home",
   components: {
     navBar,
     scroll,
@@ -72,6 +84,10 @@ export default {
       currentType: "pop",
       currentPageHeight: "",
       showBackTop: false,
+      tabOffsetTop: 0,
+      isTabFixed: false,
+      scrollY: 0,
+      scrollX: 0,
     };
   },
   created() {
@@ -84,13 +100,19 @@ export default {
   mounted() {
     //获取一下当前界面的可视化高度，这个高度应该在窗口改变大小的时候重新计算（暂时未做）
     this.currentPageHeight = document.documentElement.clientHeight;
-    console.log(this.currentPageHeight);
 
     const refresh = debounce(this.$refs.scroll.refresh, 500);
     // console.log(Bus);
     Bus.$on("goodsItemImgLoad", () => {
       refresh();
     });
+  },
+  activated() {
+    this.$refs.scroll.scrollTo(this.scrollX, this.scrollY);
+  },
+  deactivated() {
+    this.scrollY = this.$refs.scroll.getPositionY();
+    this.scrollX = this.$refs.scroll.getPositionX();
   },
   computed: {
     showGoods() {
@@ -111,15 +133,21 @@ export default {
           this.currentType = "sell";
           break;
       }
+      this.$refs.tabControl2.currentIndex = index;
+      this.$refs.tabControl1.currentIndex = index;
     },
     loadMore() {
       this.getGoodsdata(this.currentType);
     },
     contentScroll(position) {
       this.showBackTop = -position.y > this.currentPageHeight * 0.8;
+      this.isTabFixed = -position.y > this.tabOffsetTop;
     },
     backTop() {
-      this.$refs.scroll.scrollTo(0,0)
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    swiperImgLoad() {
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
     },
     /******组件请求数据方法******/
     getHomeMultidata() {
@@ -152,11 +180,11 @@ export default {
   background-color: var(--color-tint);
   color: #fff;
 
-  position: fixed;
-  top: 0px;
+  /* position: fixed; */
+  /* top: 0px;
   left: 0;
   right: 0;
-  z-index: 9;
+  z-index: 9; */
 }
 
 .homeScroll {
@@ -167,5 +195,10 @@ export default {
   left: 0;
   right: 0;
   /* height: 100%; */
+}
+
+.tab-control {
+  position: relative;
+  z-index: 9;
 }
 </style>

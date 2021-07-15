@@ -1,36 +1,42 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 
-const category = () => import('../views/category/category.vue');
-const car = () => import('../views/car/car.vue');
-const home = () => import('../views/home/home.vue');
-const user = () => import('../views/user/user.vue');
+const Category = () => import('../views/category/category.vue');
+const Car = () => import('../views/car/car.vue');
+const Home = () => import('../views/home/home.vue');
+const User = () => import('../views/user/user.vue');
+const Details = () => import('../views/details/details.vue')
 
 
 const routes = [
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/Home'
   },
   {
-    name: "home",
-    path: "/home",
-    component: home
+    name: "Home",
+    path: "/Home",
+    component: Home
   }
   , {
-    name: "category",
-    path: "/category",
-    component: category
+    name: "Category",
+    path: "/Category",
+    component: Category
   }
   , {
-    name: "car",
-    path: "/car",
-    component: car
+    name: "Car",
+    path: "/Car",
+    component: Car
   }
   , {
-    name: "user",
-    path: "/user",
-    component: user
+    name: "User",
+    path: "/User",
+    component: User
+  }
+  , {
+    name: "Details",
+    path: "/Details/::iid",
+    component: Details
   }
 ]
 

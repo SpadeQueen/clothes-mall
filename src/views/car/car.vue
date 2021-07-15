@@ -1,13 +1,10 @@
-<template>
-    购物车
-</template>
+<template>购物车</template>
 
 <script>
 export default {
-    name:"car"
-}
+  name: "Car",
+};
 </script>
 
 <style scoped>
-
 </style>

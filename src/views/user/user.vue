@@ -1,13 +1,10 @@
-<template>
-   用户
-</template>
+<template>用户</template>
 
 <script>
 export default {
-    name:"user"
-}
+  name: "User",
+};
 </script>
 
 <style scoped>
-
 </style>

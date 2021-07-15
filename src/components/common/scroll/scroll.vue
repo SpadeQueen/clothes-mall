@@ -34,14 +34,14 @@ export default {
       pullUpLoad: this.pullUpLoad,
     });
 
-    if(this.probeType==2 || this.probeType==3){
-      this.scroll.on("scroll",position=>{
-        this.$emit("scroll",position);
-      })
+    if (this.probeType == 2 || this.probeType == 3) {
+      this.scroll.on("scroll", (position) => {
+        this.$emit("scroll", position);
+      });
     }
 
     if (this.pullUpLoad) {
-      this.scroll.on("pullingUp", ()=>{
+      this.scroll.on("pullingUp", () => {
         this.$emit("pullingUp");
       });
     }
@@ -50,12 +50,18 @@ export default {
     refresh() {
       this.scroll && this.scroll.refresh();
     },
-    finishPullUp(){
-       this.scroll && this.scroll.finishPullUp();
-    }
-    ,scrollTo(){
-      this.scroll&&this.scroll.scrollTo(0,0)
-    }
+    finishPullUp() {
+      this.scroll && this.scroll.finishPullUp();
+    },
+    scrollTo(x, y, time = 1000) {
+      this.scroll && this.scroll.scrollTo(x, y, time);
+    },
+    getPositionY() {
+      return this.scroll ? this.scroll.y : 0;
+    },
+    getPositionX() {
+      return this.scroll ? this.scroll.x : 0;
+    },
   },
 };
 </script>

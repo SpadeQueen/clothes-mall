@@ -1,13 +1,10 @@
-<template>
-    分类
-</template>
+<template>分类</template>
 
 <script>
 export default {
-    name:"category"
-}
+  name: "Category",
+};
 </script>
 
 <style scoped>
-
 </style>

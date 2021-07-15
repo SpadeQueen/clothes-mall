@@ -1,8 +1,14 @@
 <template>
   <div id="app" class="app">
-    <router-view></router-view>
+    <!-- <keep-alive>
+      <router-view></router-view>
+    </keep-alive> -->
+    <router-view v-slot="{ Component }">
+      <keep-alive exclude="Details">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
     <main-tab-bar></main-tab-bar>
-    <swiper></swiper>
   </div>
 </template>
 
@@ -12,7 +18,7 @@ import MainTabBar from "components/contents/mainTabbar/MainTabBar";
 export default {
   name: "app",
   components: {
-    MainTabBar
+    MainTabBar,
   },
 };
 </script>
