@@ -3,9 +3,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const Category = () => import('../views/category/category.vue');
 const Car = () => import('../views/car/car.vue');
-const Home = () => import('../views/home/home.vue');
+const Home = () => import('../views/home/Home.vue');
 const User = () => import('../views/user/user.vue');
-const Details = () => import('../views/details/details.vue')
+const Details = () => import('../views/details/Details.vue')
 
 
 const routes = [

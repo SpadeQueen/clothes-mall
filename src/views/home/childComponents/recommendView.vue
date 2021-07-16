@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "recommendView",
+  name: "RecommendView",
   props: {
     recommend: {
       type: Array,

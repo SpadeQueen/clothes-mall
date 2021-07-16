@@ -46,9 +46,9 @@ import tabController from "contents/tabController/tabController.vue";
 import GoodsList from "contents/GoodsList/GoodsList.vue";
 import backTop from "contents/backTop/backTop.vue";
 
-import HomeSwiper from "./childComponents/HomeSwiper";
-import recommendView from "./childComponents/recommendView.vue";
-import popularView from "./childComponents/popularView.vue";
+import HomeSwiper from "./childComponents/HomeSwiper.vue";
+import RecommendView from "./childComponents/RecommendView.vue";
+import PopularView from "./childComponents/PopularView.vue";
 
 import { getHomeMultidata, getGoodsdata } from "network/home.js";
 
@@ -67,8 +67,8 @@ export default {
     GoodsList,
 
     HomeSwiper,
-    recommendView,
-    popularView,
+    RecommendView,
+    PopularView,
     BackTop,
   },
   data() {
