@@ -1,28 +1,54 @@
 <!--商品详情组件-->
 <template>
   <div>
-    <details-nav-bar :title="barTitle"></details-nav-bar>
+    <details-nav-bar></details-nav-bar>
+    <details-swiper :images="swiperImages"></details-swiper>
+    <details-base-info></details-base-info>
   </div>
 </template>
 
 <script>
+import {getDetail,getRecommend,Goods,Shop,GoodsParam} from "network/details.js";
+
 import DetailsNavBar from "./childComponents/DetailsNavBar.vue";
+import DetailsSwiper from "./childComponents/DetailsSwiper.vue";
+import DetailsBaseInfo from "./childComponents/DetailsBaseInfo.vue"
 
 export default {
   name: "Details",
   created() {
-    console.log(this.$route.params.iid);
+    this.iid=this.$route.params.iid;
+    this.getDetail(this.iid);
   },
   components:{
-    DetailsNavBar
+    DetailsNavBar,
+    DetailsSwiper,
+    DetailsBaseInfo
   }
   ,data(){
     return {
-      
+      iid:"",
+      swiperImages:[],
+      goods:Goods
     }
+  }
+  ,methods:{
+    getDetail(iid){
+      getDetail(iid).then(res=>{
+        console.log(res);
+        const data = res.data.result;
+
+        //1.轮播图图片
+        this.swiperImages=data.itemInfo.topImages;
+        //2.商品基础信息
+        this.goods=new Goods(data.itemInfo,data.columns,data.shopInfo.services)
+      })
+    }
+
   }
 };
 </script>
 
 <style scoped>
+
 </style>
