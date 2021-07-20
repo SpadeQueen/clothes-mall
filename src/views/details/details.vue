@@ -3,7 +3,7 @@
   <div>
     <details-nav-bar></details-nav-bar>
     <details-swiper :images="swiperImages"></details-swiper>
-    <details-base-info></details-base-info>
+    <details-base-info :goods="goods"></details-base-info>
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
     return {
       iid:"",
       swiperImages:[],
-      goods:Goods
+      goods:{}
     }
   }
   ,methods:{
