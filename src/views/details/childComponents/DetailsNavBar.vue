@@ -48,7 +48,7 @@ export default {
 }
 .title {
   display: flex;
-  font-size: 13px;
+  font-size: 14px;
 }
 .titleItem {
   flex: 1;
