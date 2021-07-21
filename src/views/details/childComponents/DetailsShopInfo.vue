@@ -1,6 +1,6 @@
 <!-- 商品详情的店铺信息组件 -->
 <template>
-  <div class="shop">
+  <div class="shop"  v-if="Object.keys(shops).length !== 0">
     <div class="shopTop">
       <img :src="shops.logo" />
       <span>{{ shops.name }}</span>
@@ -30,10 +30,10 @@
         </table>
       </div>
     </div>
+    <div class="shop-bottom">
+      <div class="enter-shop">进店逛逛</div>
+    </div>
   </div>
-  <ul>
-    <li v-for="item in 100">{{ item }}</li>
-  </ul>
 </template>
 
 <script>
@@ -68,8 +68,8 @@ export default {
   width: 45px;
   height: 45px;
 }
-.shopTop span{
-    margin-left:10px;
+.shopTop span {
+  margin-left: 10px;
 }
 .shopCenter {
   margin-top: 15px;
@@ -77,12 +77,12 @@ export default {
   align-items: center;
   text-align: center;
 }
-.countNum{
-     font-size: 18px;
+.countNum {
+  font-size: 18px;
 }
-.countText{
-    font-size: 13px;
-    margin-top: 10px;;
+.countText {
+  font-size: 13px;
+  margin-top: 10px;
 }
 .shopLeft {
   flex: 1;
@@ -110,14 +110,26 @@ export default {
 .shopRight .score-better {
   color: #f13e3a;
 }
-
 .shopRight .better span {
   background-color: #5ea732;
   color: #fff;
   text-align: center;
 }
-
 .shopRight .better-more span {
   background-color: #f13e3a;
+}
+.shop-bottom {
+  text-align: center;
+  margin-top: 10px;
+}
+.enter-shop {
+  display: inline-block;
+  font-size: 14px;
+  background-color: #f2f5f8;
+  width: 150px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 10px;
 }
 </style>
