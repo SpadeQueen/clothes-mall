@@ -1,15 +1,23 @@
 <!--商品详情组件-->
 <template>
-  <div>
-    <details-nav-bar></details-nav-bar>
-    <scroll>
+  <div class="details">
+    <details-nav-bar ref="nav" @TitleClick="navBarClick"></details-nav-bar>
+    <scroll
+      ref="scroll"
+      class="detailsScroll"
+      :probe-type="3"
+      @scroll="detailsScroll"
+    >
       <details-swiper :images="swiperImages"></details-swiper>
       <details-base-info :goods="goods"></details-base-info>
       <details-shop-info :shops="shops"></details-shop-info>
       <details-goods-info :goodsDetails="goodsDetails"></details-goods-info>
-      <details-param-info :paramsInfo="paramsInfo"></details-param-info>
-      <details-comments :comments="comments"></details-comments>
-      <goods-list :goodsList="recommendGoods"></goods-list>
+      <details-param-info
+        ref="params"
+        :paramsInfo="paramsInfo"
+      ></details-param-info>
+      <details-comments ref="comment" :comments="comments"></details-comments>
+      <goods-list ref="recommend" :goodsList="recommendGoods"></goods-list>
     </scroll>
   </div>
 </template>
@@ -22,8 +30,10 @@ import {
   Shop,
   GoodsParam,
 } from "network/details.js";
-import Bus from "../../common/Bus.js";
 
+import { imageLoadListenerMixin } from "../../common/mixin.js";
+import Bus from "../../common/Bus.js";
+import { debounce } from "../../common/utils.js";
 
 import scroll from "common/scroll/scroll.vue";
 
@@ -58,6 +68,7 @@ export default {
     DetailsComments,
     Scroll,
   },
+  mixins: [imageLoadListenerMixin],
   data() {
     return {
       iid: "",
@@ -68,9 +79,47 @@ export default {
       paramsInfo: {},
       comments: {},
       recommendGoods: [],
+      getTopYs: null,
+      topYs: [],
+      currentIndex: 0,
     };
   },
+  mounted() {
+    //此处的监视是为了获取各个模块的高度
+    this.getTopYs = debounce(() => {
+      this.topYs = [];
+      this.topYs.push(0);
+      this.topYs.push(this.$refs.params?this.$refs.params.$el.offsetTop:0);
+      this.topYs.push(this.$refs.comment?this.$refs.comment.$el.offsetTop:0);
+      this.topYs.push(this.$refs.recommend?this.$refs.recommend.$el.offsetTop:0);
+      this.topYs.push(Number.MAX_VALUE); // 在数组末尾增加一个无限大的值，为了之后对数组做遍历
+    }, 100);
+
+    Bus.$on("goodsItemImgLoad", () => {
+      this.getTopYs();
+      console.log("数据是："+this.topYs);
+    });
+  },
   methods: {
+    /***事件方法***/
+    detailsScroll(position) {
+      const positionY = -position.y;
+      let length = this.topYs.length;
+
+      for (let i = 0; i < length; i++) {
+        if (
+          (this.currentIdex != i) &
+          ((positionY >= this.topYs[i]) & (positionY <= this.topYs[i + 1]))
+        ) {
+          this.currentIndex = i;
+          this.$refs.nav.currentIndex = this.currentIndex;
+        }
+      }
+    },
+    navBarClick(index) {
+      this.$refs.scroll.scrollTo(0, -this.topYs[index], 100);
+    },
+    /***网络请求***/
     getDetail(iid) {
       getDetail(iid).then((res) => {
         const data = res.data.result;
@@ -109,4 +158,16 @@ export default {
 </script>
 
 <style scoped>
+.details {
+  height: 100vh;
+  position: relative;
+}
+.detailsScroll {
+  overflow: hidden;
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
+}
 </style>

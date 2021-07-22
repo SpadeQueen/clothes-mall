@@ -3,14 +3,14 @@
   <div>
     <nav-bar>
       <template #nav-left>
-        <img src="~assets\img\common\back.svg" class="imgClass" />
+        <img src="~assets\img\common\back.svg" class="imgClass" @click="ImgNavBarClick"/>
       </template>
       <template #nav-center>
         <div class="title">
           <span
             v-for="(item, index) in barTitle"
             class="titleItem"
-            @click="titleClick(index)"
+            @click="TitleClick(index)"
             :key="index"
             :class="{activeClass:index===currentIndex}"
             >{{ item }}</span
@@ -35,9 +35,13 @@ export default {
     };
   },
   methods: {
-    titleClick(index) {
+    TitleClick(index) {
       this.currentIndex = index;
+      this.$emit("TitleClick",index)
     },
+    ImgNavBarClick(){
+      this.$router.back();
+    }
   },
 };
 </script>

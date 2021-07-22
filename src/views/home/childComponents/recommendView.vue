@@ -23,7 +23,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .feature {
   display: flex;
   margin-top: 10px;

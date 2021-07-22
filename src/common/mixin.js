@@ -12,6 +12,6 @@ export const imageLoadListenerMixin = {
     mounted() {
         const refresh = debounce(this.$refs.scroll.refresh, 100);
         this.itemImgListener = () => { refresh() };
-        Bus.$on('goodsItemImgLoad', this.itemImgListener);      
+        Bus.$on('goodsItemImgLoad', this.itemImgListener);  
     },
 }

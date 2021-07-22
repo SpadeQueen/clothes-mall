@@ -34,6 +34,8 @@ export default {
       pullUpLoad: this.pullUpLoad,
     });
 
+    console.log(this.scroll);
+
     if (this.probeType == 2 || this.probeType == 3) {
       this.scroll.on("scroll", (position) => {
         this.$emit("scroll", position);
