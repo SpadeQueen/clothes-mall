@@ -1,7 +1,7 @@
 <!-- 商品展示的Item组件 -->
 <template>
   <div class="goodsListItem" @click="goodsItemClick">
-    <img :src="goods.show.img" @load="goodsItemImgLoad" />
+    <img :src="showImage()" @load="goodsItemImgLoad" />
     <div class="goodsInfo">
       <p>{{ goods.title }}</p>
       <span class="price">{{ goods.price }}</span>
@@ -33,6 +33,9 @@ export default {
     goodsItemClick() {
       this.$router.push("/Details/" + this.goods.iid);
     },
+    showImage () {
+      return this.goods.image || this.goods.img || this.goods.show.img
+    }
   },
 };
 </script>

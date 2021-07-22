@@ -2,12 +2,15 @@
 <template>
   <div>
     <details-nav-bar></details-nav-bar>
-    <details-swiper :images="swiperImages"></details-swiper>
-    <details-base-info :goods="goods"></details-base-info>
-    <details-shop-info :shops="shops"></details-shop-info>
-    <details-goods-info :goodsDetails="goodsDetails"></details-goods-info>
-    <details-param-info :paramsInfo="paramsInfo"></details-param-info>
-    <details-comments :comments="comments"></details-comments>
+    <scroll>
+      <details-swiper :images="swiperImages"></details-swiper>
+      <details-base-info :goods="goods"></details-base-info>
+      <details-shop-info :shops="shops"></details-shop-info>
+      <details-goods-info :goodsDetails="goodsDetails"></details-goods-info>
+      <details-param-info :paramsInfo="paramsInfo"></details-param-info>
+      <details-comments :comments="comments"></details-comments>
+      <goods-list :goodsList="recommendGoods"></goods-list>
+    </scroll>
   </div>
 </template>
 
@@ -19,6 +22,12 @@ import {
   Shop,
   GoodsParam,
 } from "network/details.js";
+import Bus from "../../common/Bus.js";
+
+
+import scroll from "common/scroll/scroll.vue";
+
+import GoodsList from "components/contents/GoodsList/GoodsList.vue";
 
 import DetailsNavBar from "./childComponents/DetailsNavBar.vue";
 import DetailsSwiper from "./childComponents/DetailsSwiper.vue";
@@ -27,14 +36,19 @@ import DetailsShopInfo from "./childComponents/DetailsShopInfo.vue";
 import DetailsGoodsInfo from "./childComponents/DetailsGoodsInfo.vue";
 import DetailsParamInfo from "./childComponents/DetailsParamInfo.vue";
 import DetailsComments from "./childComponents/DetailsComments.vue";
+import Scroll from "../../components/common/scroll/scroll.vue";
 
 export default {
   name: "Details",
   created() {
     this.iid = this.$route.params.iid;
     this.getDetail(this.iid);
+    this.getRecommend();
   },
   components: {
+    scroll,
+    GoodsList,
+
     DetailsNavBar,
     DetailsSwiper,
     DetailsBaseInfo,
@@ -42,6 +56,7 @@ export default {
     DetailsGoodsInfo,
     DetailsParamInfo,
     DetailsComments,
+    Scroll,
   },
   data() {
     return {
@@ -52,13 +67,13 @@ export default {
       goodsDetails: {},
       paramsInfo: {},
       comments: {},
+      recommendGoods: [],
     };
   },
   methods: {
     getDetail(iid) {
       getDetail(iid).then((res) => {
         const data = res.data.result;
-        console.log(data);
 
         //1.轮播图图片
         this.swiperImages = data.itemInfo.topImages;
@@ -81,6 +96,12 @@ export default {
         if (data.rate.cRate !== 0) {
           this.comments = data.rate.list[0];
         }
+      });
+    },
+    getRecommend() {
+      getRecommend().then((res) => {
+        this.recommendGoods = res.data.data.list;
+        console.log(this.recommendGoods);
       });
     },
   },

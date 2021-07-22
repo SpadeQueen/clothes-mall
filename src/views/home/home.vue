@@ -39,6 +39,11 @@
 </template>
 
 <script>
+import { getHomeMultidata, getGoodsdata } from "network/home.js";
+
+import {imageLoadListenerMixin} from "../../common/mixin.js"
+import Bus from "../../common/Bus.js";
+
 import navBar from "common/navBar/NavBar.vue";
 import scroll from "common/scroll/scroll.vue";
 
@@ -50,10 +55,6 @@ import HomeSwiper from "./childComponents/HomeSwiper.vue";
 import RecommendView from "./childComponents/RecommendView.vue";
 import PopularView from "./childComponents/PopularView.vue";
 
-import { getHomeMultidata, getGoodsdata } from "network/home.js";
-
-import { debounce } from "../../common/utils.js";
-import Bus from "../../common/Bus.js";
 import BackTop from "../../components/contents/backTop/backTop.vue";
 
 export default {
@@ -71,6 +72,7 @@ export default {
     PopularView,
     BackTop,
   },
+  mixins:[imageLoadListenerMixin],
   data() {
     return {
       result: null,
@@ -101,18 +103,21 @@ export default {
     //获取一下当前界面的可视化高度，这个高度应该在窗口改变大小的时候重新计算（暂时未做）
     this.currentPageHeight = document.documentElement.clientHeight;
 
-    const refresh = debounce(this.$refs.scroll.refresh, 500);
-    // console.log(Bus);
-    Bus.$on("goodsItemImgLoad", () => {
-      refresh();
-    });
+    // const refresh = debounce(this.$refs.scroll.refresh, 500);
+    // // console.log(Bus);
+    // Bus.$on("goodsItemImgLoad", () => {
+    //   refresh();
+    // });
   },
   activated() {
     this.$refs.scroll.scrollTo(this.scrollX, this.scrollY);
+    this.$refs.scroll.refresh();
   },
   deactivated() {
     this.scrollY = this.$refs.scroll.getPositionY();
     this.scrollX = this.$refs.scroll.getPositionX();
+
+    Bus.$off("goodsItemImgLoad", this.itemImgListener);
   },
   computed: {
     showGoods() {

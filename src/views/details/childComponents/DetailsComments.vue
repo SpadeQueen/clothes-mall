@@ -7,16 +7,13 @@
     </div>
     <div class="commentCenter">{{ comments.content }}</div>
     <div class="commentTime">
-      <span>{{ showDate(comments.created) }}</span>
-      <span>{{ comments.style }}</span>
+      <span>{{ showDate}}</span>
+      <span class="commentStyleText">{{ comments.style }}</span>
     </div>
     <div class="commentList">
       <img v-for="item in comments.images" :src="item" />
     </div>
   </div>
-  <ul>
-    <li v-for="item in 100">{{ item }}</li>
-  </ul>
 </template>
 
 <script>
@@ -33,13 +30,16 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+
+    };
   },
   computed: {
-    showDate(value) {
+    showDate() {
       //   1. 将时间戳转化为Date对象
-      const date = new Date(value * 1000);
-      return formatDate(date, "yyyy-MM-dd hh:mm:ss");
+      const date = new Date(this.comments.created * 1000);
+      let dateStr=formatDate(date, "yyyy-MM-dd hh:mm:ss")
+      return dateStr;
     },
   },
 };
@@ -75,6 +75,9 @@ export default {
   font-size: 12px;
   color: #777;
   margin-left: 3px;
+}
+.commentStyleText{
+  margin-left: 10px;
 }
 .commentList img {
   width: 70px;
