@@ -11,8 +11,6 @@
 </template>
 
 <script>
-import Bus from "../../../common/Bus.js";
-
 export default {
   name: "GoodsListItem",
   props: {
@@ -28,7 +26,7 @@ export default {
   },
   methods: {
     goodsItemImgLoad() {
-      Bus.$emit("goodsItemImgLoad");
+      this.$Bus.$emit("goodsItemImgLoad");
     },
     goodsItemClick() {
       this.$router.push("/Details/" + this.goods.iid);

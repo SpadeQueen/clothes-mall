@@ -41,38 +41,34 @@
 <script>
 import { getHomeMultidata, getGoodsdata } from "network/home.js";
 
-import {imageLoadListenerMixin} from "../../common/mixin.js"
-import Bus from "../../common/Bus.js";
+import {imageLoadListenerMixin,backTopMixin} from "../../common/mixin.js"
+// import Bus from "../../common/Bus.js";
 
 import navBar from "common/navBar/NavBar.vue";
 import scroll from "common/scroll/scroll.vue";
 
 import tabController from "contents/tabController/tabController.vue";
 import GoodsList from "contents/GoodsList/GoodsList.vue";
-import backTop from "contents/backTop/backTop.vue";
 
 import HomeSwiper from "./childComponents/HomeSwiper.vue";
 import RecommendView from "./childComponents/RecommendView.vue";
 import PopularView from "./childComponents/PopularView.vue";
 
-import BackTop from "../../components/contents/backTop/backTop.vue";
 
 export default {
   name: "Home",
   components: {
     navBar,
     scroll,
-    backTop,
-
     tabController,
     GoodsList,
 
     HomeSwiper,
     RecommendView,
     PopularView,
-    BackTop,
+    
   },
-  mixins:[imageLoadListenerMixin],
+  mixins:[imageLoadListenerMixin,backTopMixin],
   data() {
     return {
       result: null,
@@ -83,9 +79,7 @@ export default {
         new: { page: 0, list: [] },
         sell: { page: 0, list: [] },
       },
-      currentType: "pop",
-      currentPageHeight: "",
-      showBackTop: false,
+      currentType: "pop",     
       tabOffsetTop: 0,
       isTabFixed: false,
       scrollY: 0,
@@ -100,8 +94,6 @@ export default {
     this.getGoodsdata("sell");
   },
   mounted() {
-    //获取一下当前界面的可视化高度，这个高度应该在窗口改变大小的时候重新计算（暂时未做）
-    this.currentPageHeight = document.documentElement.clientHeight;
 
     // const refresh = debounce(this.$refs.scroll.refresh, 500);
     // // console.log(Bus);
@@ -117,7 +109,7 @@ export default {
     this.scrollY = this.$refs.scroll.getPositionY();
     this.scrollX = this.$refs.scroll.getPositionX();
 
-    Bus.$off("goodsItemImgLoad", this.itemImgListener);
+    this.$Bus.$off("goodsItemImgLoad", this.itemImgListener);
   },
   computed: {
     showGoods() {
@@ -147,9 +139,6 @@ export default {
     contentScroll(position) {
       this.showBackTop = -position.y > this.currentPageHeight * 0.8;
       this.isTabFixed = -position.y > this.tabOffsetTop;
-    },
-    backTop() {
-      this.$refs.scroll.scrollTo(0, 0);
     },
     swiperImgLoad() {
       this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;

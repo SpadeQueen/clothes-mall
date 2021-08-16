@@ -19,6 +19,8 @@
       <details-comments ref="comment" :comments="comments"></details-comments>
       <goods-list ref="recommend" :goodsList="recommendGoods"></goods-list>
     </scroll>
+    <details-bottom-bar></details-bottom-bar>
+    <back-top v-show="showBackTop" @click.native="backTop"></back-top>
   </div>
 </template>
 
@@ -31,8 +33,7 @@ import {
   GoodsParam,
 } from "network/details.js";
 
-import { imageLoadListenerMixin } from "../../common/mixin.js";
-import Bus from "../../common/Bus.js";
+import { imageLoadListenerMixin, backTopMixin } from "../../common/mixin.js";
 import { debounce } from "../../common/utils.js";
 
 import scroll from "common/scroll/scroll.vue";
@@ -46,7 +47,7 @@ import DetailsShopInfo from "./childComponents/DetailsShopInfo.vue";
 import DetailsGoodsInfo from "./childComponents/DetailsGoodsInfo.vue";
 import DetailsParamInfo from "./childComponents/DetailsParamInfo.vue";
 import DetailsComments from "./childComponents/DetailsComments.vue";
-import Scroll from "../../components/common/scroll/scroll.vue";
+import DetailsBottomBar from "./childComponents/DetailsBottomBar.vue";
 
 export default {
   name: "Details",
@@ -66,9 +67,9 @@ export default {
     DetailsGoodsInfo,
     DetailsParamInfo,
     DetailsComments,
-    Scroll,
+    DetailsBottomBar,
   },
-  mixins: [imageLoadListenerMixin],
+  mixins: [imageLoadListenerMixin, backTopMixin],
   data() {
     return {
       iid: "",
@@ -89,16 +90,23 @@ export default {
     this.getTopYs = debounce(() => {
       this.topYs = [];
       this.topYs.push(0);
-      this.topYs.push(this.$refs.params?this.$refs.params.$el.offsetTop:0);
-      this.topYs.push(this.$refs.comment?this.$refs.comment.$el.offsetTop:0);
-      this.topYs.push(this.$refs.recommend?this.$refs.recommend.$el.offsetTop:0);
+      this.topYs.push(this.$refs.params ? this.$refs.params.$el.offsetTop : 0);
+      this.topYs.push(
+        this.$refs.comment ? this.$refs.comment.$el.offsetTop : 0
+      );
+      this.topYs.push(
+        this.$refs.recommend ? this.$refs.recommend.$el.offsetTop : 0
+      );
       this.topYs.push(Number.MAX_VALUE); // 在数组末尾增加一个无限大的值，为了之后对数组做遍历
     }, 100);
 
-    Bus.$on("goodsItemImgLoad", () => {
+    this.$Bus.$on("goodsItemImgLoad", () => {
       this.getTopYs();
-      console.log("数据是："+this.topYs);
     });
+  },
+  unmounted() {
+    // 离开组件时取消图片加载监听事件
+    this.$Bus.$off("itemImageLoad", this.itemImgListener);
   },
   methods: {
     /***事件方法***/
@@ -115,6 +123,8 @@ export default {
           this.$refs.nav.currentIndex = this.currentIndex;
         }
       }
+
+      this.showBackTop = -position.y > this.currentPageHeight * 0.8;
     },
     navBarClick(index) {
       this.$refs.scroll.scrollTo(0, -this.topYs[index], 100);
@@ -150,7 +160,6 @@ export default {
     getRecommend() {
       getRecommend().then((res) => {
         this.recommendGoods = res.data.data.list;
-        console.log(this.recommendGoods);
       });
     },
   },
@@ -159,15 +168,18 @@ export default {
 
 <style scoped>
 .details {
-  height: 100vh;
   position: relative;
+  z-index: 9;
+  background: #fff;
+  height: 100vh;
 }
 .detailsScroll {
   overflow: hidden;
-  position: absolute;
+  /* position: absolute;
   top: 44px;
   bottom: 49px;
   left: 0;
-  right: 0;
+  right: 0; */
+  height: calc(100% - 44px - 44px);
 }
 </style>
